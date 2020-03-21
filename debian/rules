@@ -1,0 +1,14 @@
+#!/usr/bin/make -f
+include /usr/share/dpkg/architecture.mk
+
+export DEB_BUILD_MAINT_OPTIONS=hardening=+all
+
+ifeq ($(DEB_HOST_ARCH_CPU),i386)
+  # Uchardet seems to rely on IEEE 754 float rounding. Use -ffloat-store to make
+  # testsuite pass and make i386 give consistent results between architectures.
+  # See https://bugs.freedesktop.org/show_bug.cgi?id=101033
+  export DEB_CXXFLAGS_MAINT_APPEND := -ffloat-store
+endif
+
+%:
+	dh $@
